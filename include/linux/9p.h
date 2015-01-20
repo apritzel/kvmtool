@@ -407,17 +407,17 @@ struct p9_wstat {
 	char *gid;
 	char *muid;
 	char *extension;	/* 9p2000.u extensions */
-	kuid_t n_uid;		/* 9p2000.u extensions */
-	kgid_t n_gid;		/* 9p2000.u extensions */
-	kuid_t n_muid;		/* 9p2000.u extensions */
+	uid_t n_uid;		/* 9p2000.u extensions */
+	gid_t n_gid;		/* 9p2000.u extensions */
+	uid_t n_muid;		/* 9p2000.u extensions */
 };
 
 struct p9_stat_dotl {
 	u64 st_result_mask;
 	struct p9_qid qid;
 	u32 st_mode;
-	kuid_t st_uid;
-	kgid_t st_gid;
+	uid_t st_uid;
+	gid_t st_gid;
 	u64 st_nlink;
 	u64 st_rdev;
 	u64 st_size;
@@ -471,8 +471,8 @@ struct p9_stat_dotl {
 struct p9_iattr_dotl {
 	u32 valid;
 	u32 mode;
-	kuid_t uid;
-	kgid_t gid;
+	uid_t uid;
+	gid_t gid;
 	u64 size;
 	u64 atime_sec;
 	u64 atime_nsec;
