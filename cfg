@@ -1,0 +1,517 @@
+Documentation/kvm-balloon.txt:lkvm-balloon(1)
+Documentation/kvm-balloon.txt:lkvm-balloon - Inflate or deflate the virtio balloon
+Documentation/kvm-debug.txt:lkvm-debug(1)
+Documentation/kvm-debug.txt:lkvm-debug - Print debug information from a running instance
+Documentation/kvm-list.txt:lkvm-list(1)
+Documentation/kvm-list.txt:lkvm-list - Print a list of running instances on the host.
+Documentation/kvm-pause.txt:lkvm-pause(1)
+Documentation/kvm-pause.txt:lkvm-pause - Pause the virtual machine
+Documentation/kvm-resume.txt:lkvm-resume(1)
+Documentation/kvm-resume.txt:lkvm-resume - Resume the virtual machine
+Documentation/kvm-run.txt:lkvm-run(1)
+Documentation/kvm-run.txt:lkvm-run - Start the virtual machine
+Documentation/kvm-sandbox.txt:lkvm-sandbox(1)
+Documentation/kvm-sandbox.txt:lkvm-sandbox - Run a command in a sandboxed guest
+Documentation/kvm-setup.txt:lkvm-setup(1)
+Documentation/kvm-setup.txt:lkvm-setup - Setup a new virtual machine
+Documentation/kvm-stat.txt:lkvm-stat(1)
+Documentation/kvm-stat.txt:lkvm-stat - Print statistics about a running instance
+Documentation/kvm-stop.txt:lkvm-stop(1)
+Documentation/kvm-stop.txt:lkvm-stop - Stop a running instance
+Documentation/kvm-version.txt:lkvm-version(1)
+Documentation/kvm-version.txt:lkvm-version - Print the version of the kernel tree kvm tools
+Makefile:OBJS	+= kvm-cpu.o
+Makefile:OBJS	+= kvm-cmd.o
+Makefile:OBJS	+= kvm-ipc.o
+Makefile:	OBJS	+= x86/kvm-cpu.o
+Makefile:	OBJS	+= powerpc/kvm-cpu.o
+Makefile:			   arm/kvm.o arm/kvm-cpu.o arm/timer.o
+Makefile:	OBJS		+= arm/aarch32/kvm-cpu.o
+Makefile:	OBJS		+= arm/aarch64/kvm-cpu.o
+Makefile:$(KVM_INCLUDE)/common-cmds.h: $(wildcard Documentation/kvm-*.txt)
+README:  git remote add kvm-tool git://github.com/penberg/linux-kvm.git
+README:  git checkout kvm-tool/master -b kvm-tool
+arm/aarch32/arm-cpu.c:#include "kvm/kvm-cpu.h"
+arm/aarch32/include/kvm/kvm-arch.h:#include "arm-common/kvm-arch.h"
+arm/aarch32/include/kvm/kvm-config-arch.h:#include "arm-common/kvm-config-arch.h"
+arm/aarch32/include/kvm/kvm-cpu-arch.h:#include "arm-common/kvm-cpu-arch.h"
+arm/aarch32/kvm-cpu.c:#include "kvm/kvm-cpu.h"
+arm/aarch32/kvm-cpu.c:	data	= kvm->arch.dtb_guest_start;
+arm/aarch32/kvm-cpu.c:	data	= kvm->arch.kern_guest_start;
+arm/aarch64/arm-cpu.c:#include "kvm/kvm-cpu.h"
+arm/aarch64/arm-cpu.c:				kvm->cfg.arch.gicv3 ?
+arm/aarch64/include/kvm/kvm-arch.h:#include "arm-common/kvm-arch.h"
+arm/aarch64/include/kvm/kvm-config-arch.h:#include "arm-common/kvm-config-arch.h"
+arm/aarch64/include/kvm/kvm-cpu-arch.h:#include "arm-common/kvm-cpu-arch.h"
+arm/aarch64/kvm-cpu.c:#include "kvm/kvm-cpu.h"
+arm/aarch64/kvm-cpu.c:	data	= kvm->arch.dtb_guest_start;
+arm/aarch64/kvm-cpu.c:	data	= kvm->arch.kern_guest_start;
+arm/aarch64/kvm-cpu.c:		data	= kvm->arch.dtb_guest_start;
+arm/aarch64/kvm-cpu.c:		data	= kvm->arch.kern_guest_start;
+arm/aarch64/kvm-cpu.c:	if (vcpu->kvm->cfg.arch.aarch32_guest)
+arm/fdt.c:#include "kvm/kvm-cpu.h"
+arm/fdt.c:	for (cpu = 0; cpu < kvm->nrcpus; ++cpu) {
+arm/fdt.c:		struct kvm_cpu *vcpu = kvm->cpus[cpu];
+arm/fdt.c:		if (kvm->nrcpus > 1)
+arm/fdt.c:		cpu_to_fdt64(kvm->arch.memory_guest_start),
+arm/fdt.c:		cpu_to_fdt64(kvm->ram_size),
+arm/fdt.c:						     kvm->arch.dtb_guest_start);
+arm/fdt.c:					= kvm->cpus[0]->generate_fdt_nodes;
+arm/fdt.c:	if (kvm->arch.initrd_size != 0) {
+arm/fdt.c:		u32 ird_st_prop = cpu_to_fdt64(kvm->arch.initrd_guest_start);
+arm/fdt.c:		u32 ird_end_prop = cpu_to_fdt64(kvm->arch.initrd_guest_start +
+arm/fdt.c:					       kvm->arch.initrd_size);
+arm/fdt.c:	if (kvm->cfg.arch.dump_dtb_filename)
+arm/fdt.c:		dump_fdt(kvm->cfg.arch.dump_dtb_filename, fdt_dest);
+arm/fdt.c:	limit = kvm->ram_start + min(kvm->ram_size, (u64)SZ_256M) - 1;
+arm/fdt.c:	pos = kvm->ram_start + ARM_KERN_OFFSET(kvm);
+arm/fdt.c:	kvm->arch.kern_guest_start = host_to_guest_flat(kvm, pos);
+arm/fdt.c:		kvm->arch.kern_guest_start,
+arm/fdt.c:		host_to_guest_flat(kvm, pos) - kvm->arch.kern_guest_start);
+arm/fdt.c:	kvm->arch.dtb_guest_start = guest_addr;
+arm/fdt.c:		kvm->arch.dtb_guest_start,
+arm/fdt.c:		kvm->arch.initrd_guest_start = initrd_start;
+arm/fdt.c:		kvm->arch.initrd_size = host_to_guest_flat(kvm, pos) - initrd_start;
+arm/fdt.c:			kvm->arch.initrd_guest_start,
+arm/fdt.c:			kvm->arch.initrd_size);
+arm/fdt.c:		kvm->arch.initrd_size = 0;
+arm/gic.c:	err = ioctl(kvm->vm_fd, KVM_CREATE_DEVICE, &gic_device);
+arm/gic.c:	err = ioctl(kvm->vm_fd, KVM_CREATE_IRQCHIP);
+arm/gic.c:	err = ioctl(kvm->vm_fd, KVM_ARM_SET_DEVICE_ADDR, &gic_addr[0]);
+arm/gic.c:	err = ioctl(kvm->vm_fd, KVM_ARM_SET_DEVICE_ADDR, &gic_addr[1]);
+arm/gic.c:	if (kvm->nrcpus > 255) {
+arm/gic.c:				kvm->nrcpus, 255);
+arm/gic.c:		kvm->nrcpus = 255;
+arm/gic.c:	if (kvm->nrcpus > GIC_MAX_CPUS) {
+arm/gic.c:				kvm->nrcpus, GIC_MAX_CPUS);
+arm/gic.c:		kvm->nrcpus = GIC_MAX_CPUS;
+arm/gic.c:	nr_vcpus = kvm->nrcpus;
+arm/gic.c:	else if (ioctl(kvm->vm_fd, KVM_IRQ_LINE, &irq_level) < 0)
+arm/include/arm-common/kvm-arch.h:	if (kvm->cfg.arch.gicv3)
+arm/include/arm-common/kvm-arch.h:		limit -= ARM_GIC_REDIST_SIZE * kvm->cfg.nrcpus;
+arm/kvm-cpu.c:#include "kvm/kvm-cpu.h"
+arm/kvm-cpu.c:	vcpu->vcpu_fd = ioctl(kvm->vm_fd, KVM_CREATE_VCPU, cpu_id);
+arm/kvm-cpu.c:	mmap_size = ioctl(kvm->sys_fd, KVM_GET_VCPU_MMAP_SIZE, 0);
+arm/kvm-cpu.c:	coalesced_offset = ioctl(kvm->sys_fd, KVM_CHECK_EXTENSION,
+arm/kvm.c:	phys_size	= kvm->ram_size;
+arm/kvm.c:	host_mem	= kvm->ram_start;
+arm/kvm.c:	kvm->arch.memory_guest_start = phys_start;
+arm/kvm.c:	munmap(kvm->arch.ram_alloc_start, kvm->arch.ram_alloc_size);
+arm/kvm.c:	kvm->ram_size = min(ram_size, (u64)ARM_MAX_MEMORY(kvm));
+arm/kvm.c:	kvm->arch.ram_alloc_size = kvm->ram_size + SZ_64K;
+arm/kvm.c:	kvm->arch.ram_alloc_start = mmap_anon_or_hugetlbfs(kvm, hugetlbfs_path,
+arm/kvm.c:						kvm->arch.ram_alloc_size);
+arm/kvm.c:	if (kvm->arch.ram_alloc_start == MAP_FAILED)
+arm/kvm.c:		    kvm->arch.ram_alloc_size, errno);
+arm/kvm.c:	kvm->ram_start = (void *)ALIGN((unsigned long)kvm->arch.ram_alloc_start,
+arm/kvm.c:	madvise(kvm->arch.ram_alloc_start, kvm->arch.ram_alloc_size,
+arm/timer.c:#include "kvm/kvm-cpu.h"
+arm/timer.c:	u32 cpu_mask = (((1 << kvm->nrcpus) - 1) << GIC_FDT_IRQ_PPI_CPU_SHIFT) \
+arm/timer.c:	if (kvm->cfg.arch.force_cntfrq > 0)
+arm/timer.c:		_FDT(fdt_property_cell(fdt, "clock-frequency", kvm->cfg.arch.force_cntfrq));
+builtin-balloon.c:#include <kvm/kvm-cmd.h>
+builtin-balloon.c:#include <kvm/kvm-ipc.h>
+builtin-debug.c:#include <kvm/kvm-cmd.h>
+builtin-debug.c:#include <kvm/kvm-ipc.h>
+builtin-help.c:#include <kvm/kvm-cmd.h>
+builtin-list.c:#include <kvm/kvm-cmd.h>
+builtin-list.c:#include <kvm/kvm-ipc.h>
+builtin-pause.c:#include <kvm/kvm-cmd.h>
+builtin-pause.c:#include <kvm/kvm-ipc.h>
+builtin-resume.c:#include <kvm/kvm-cmd.h>
+builtin-resume.c:#include <kvm/kvm-ipc.h>
+builtin-run.c:#include "kvm/kvm-cpu.h"
+builtin-run.c:#include "kvm/kvm-ipc.h"
+builtin-run.c:	sprintf(name, "kvm-vcpu-%lu", current_kvm_cpu->cpu_id);
+builtin-run.c:	BUILD_OPTIONS(options, &kvm->cfg, kvm);
+builtin-run.c:	const char *rootfs = kvm->cfg.custom_rootfs_name;
+builtin-run.c:	const char *guestfs_name = kvm->cfg.custom_rootfs_name;
+builtin-run.c:	if (kvm->cfg.sandbox == NULL)
+builtin-run.c:	tmp = realpath(kvm->cfg.sandbox, NULL);
+builtin-run.c:	remove(kvm->cfg.sandbox);
+builtin-run.c:	fd = open(kvm->cfg.sandbox, O_RDWR | O_CREAT, 0777);
+builtin-run.c:	kvm->cfg.custom_rootfs_name = "default";
+builtin-run.c:		BUILD_OPTIONS(options, &kvm->cfg, kvm);
+builtin-run.c:					kvm->cfg.sandbox = DEFAULT_SANDBOX_FILENAME;
+builtin-run.c:			if ((kvm_run_wrapper == KVM_RUN_DEFAULT && kvm->cfg.kernel_filename) ||
+builtin-run.c:				(kvm_run_wrapper == KVM_RUN_SANDBOX && kvm->cfg.sandbox)) {
+builtin-run.c:				kvm->cfg.sandbox = DEFAULT_SANDBOX_FILENAME;
+builtin-run.c:				kvm->cfg.kernel_filename = argv[0];
+builtin-run.c:	kvm->nr_disks = kvm->cfg.image_count;
+builtin-run.c:	if (!kvm->cfg.kernel_filename)
+builtin-run.c:		kvm->cfg.kernel_filename = find_kernel();
+builtin-run.c:	if (!kvm->cfg.kernel_filename) {
+builtin-run.c:	kvm->cfg.vmlinux_filename = find_vmlinux();
+builtin-run.c:	kvm->vmlinux = kvm->cfg.vmlinux_filename;
+builtin-run.c:	if (kvm->cfg.nrcpus == 0)
+builtin-run.c:		kvm->cfg.nrcpus = nr_online_cpus;
+builtin-run.c:	if (!kvm->cfg.ram_size)
+builtin-run.c:		kvm->cfg.ram_size = get_ram_size(kvm->cfg.nrcpus);
+builtin-run.c:	if (kvm->cfg.ram_size > host_ram_size())
+builtin-run.c:		pr_warning("Guest memory size %lluMB exceeds host physical RAM size %lluMB", kvm->cfg.ram_size, host_ram_size());
+builtin-run.c:	kvm->cfg.ram_size <<= MB_SHIFT;
+builtin-run.c:	if (!kvm->cfg.dev)
+builtin-run.c:		kvm->cfg.dev = DEFAULT_KVM_DEV;
+builtin-run.c:	if (!kvm->cfg.console)
+builtin-run.c:		kvm->cfg.console = DEFAULT_CONSOLE;
+builtin-run.c:	if (!strncmp(kvm->cfg.console, "virtio", 6))
+builtin-run.c:		kvm->cfg.active_console  = CONSOLE_VIRTIO;
+builtin-run.c:	else if (!strncmp(kvm->cfg.console, "serial", 6))
+builtin-run.c:		kvm->cfg.active_console  = CONSOLE_8250;
+builtin-run.c:	else if (!strncmp(kvm->cfg.console, "hv", 2))
+builtin-run.c:		kvm->cfg.active_console = CONSOLE_HV;
+builtin-run.c:	if (!kvm->cfg.host_ip)
+builtin-run.c:		kvm->cfg.host_ip = DEFAULT_HOST_ADDR;
+builtin-run.c:	if (!kvm->cfg.guest_ip)
+builtin-run.c:		kvm->cfg.guest_ip = DEFAULT_GUEST_ADDR;
+builtin-run.c:	if (!kvm->cfg.guest_mac)
+builtin-run.c:		kvm->cfg.guest_mac = DEFAULT_GUEST_MAC;
+builtin-run.c:	if (!kvm->cfg.host_mac)
+builtin-run.c:		kvm->cfg.host_mac = DEFAULT_HOST_MAC;
+builtin-run.c:	if (!kvm->cfg.script)
+builtin-run.c:		kvm->cfg.script = DEFAULT_SCRIPT;
+builtin-run.c:	if (!kvm->cfg.network)
+builtin-run.c:                kvm->cfg.network = DEFAULT_NETWORK;
+builtin-run.c:	kvm__arch_set_cmdline(real_cmdline, kvm->cfg.vnc || kvm->cfg.sdl || kvm->cfg.gtk);
+builtin-run.c:	if (kvm->cfg.kernel_cmdline)
+builtin-run.c:		strlcat(real_cmdline, kvm->cfg.kernel_cmdline, sizeof(real_cmdline));
+builtin-run.c:	if (!kvm->cfg.guest_name) {
+builtin-run.c:		if (kvm->cfg.custom_rootfs) {
+builtin-run.c:			kvm->cfg.guest_name = kvm->cfg.custom_rootfs_name;
+builtin-run.c:			kvm->cfg.guest_name = default_name;
+builtin-run.c:	if (!kvm->cfg.using_rootfs && !kvm->cfg.disk_image[0].filename && !kvm->cfg.initrd_filename) {
+builtin-run.c:		kvm_setup_create_new(kvm->cfg.custom_rootfs_name);
+builtin-run.c:		kvm_setup_resolv(kvm->cfg.custom_rootfs_name);
+builtin-run.c:		kvm->cfg.using_rootfs = kvm->cfg.custom_rootfs = 1;
+builtin-run.c:	if (kvm->cfg.using_rootfs) {
+builtin-run.c:		if (kvm->cfg.custom_rootfs) {
+builtin-run.c:			if (!kvm->cfg.no_dhcp)
+builtin-run.c:	kvm->cfg.real_cmdline = real_cmdline;
+builtin-run.c:		kvm->cfg.kernel_filename, kvm->cfg.ram_size / 1024 / 1024, kvm->cfg.nrcpus, kvm->cfg.guest_name);
+builtin-run.c:	for (i = 0; i < kvm->nrcpus; i++) {
+builtin-run.c:		if (pthread_create(&kvm->cpus[i]->thread, NULL, kvm_cpu_thread, kvm->cpus[i]) != 0)
+builtin-run.c:	return pthread_join(kvm->cpus[0]->thread, &ret);
+builtin-setup.c:#include <kvm/kvm-cmd.h>
+builtin-stat.c:#include <kvm/kvm-cmd.h>
+builtin-stat.c:#include <kvm/kvm-ipc.h>
+builtin-stop.c:#include <kvm/kvm-cmd.h>
+builtin-stop.c:#include <kvm/kvm-ipc.h>
+builtin-version.c:#include <kvm/kvm-cmd.h>
+command-list.txt:lkvm-run			mainporcelain common
+command-list.txt:lkvm-setup			mainporcelain common
+command-list.txt:lkvm-pause			common
+command-list.txt:lkvm-resume			common
+command-list.txt:lkvm-version			common
+command-list.txt:lkvm-list			common
+command-list.txt:lkvm-debug			common
+command-list.txt:lkvm-balloon			common
+command-list.txt:lkvm-stop			common
+command-list.txt:lkvm-stat			common
+command-list.txt:lkvm-sandbox			common
+disk/core.c:	if (kvm->cfg.image_count >= MAX_DISK_IMAGES)
+disk/core.c:	kvm->cfg.disk_image[kvm->cfg.image_count].filename = arg;
+disk/core.c:			kvm->cfg.disk_image[kvm->cfg.image_count].wwpn = sep + 1;
+disk/core.c:			kvm->cfg.disk_image[kvm->cfg.image_count].tpgt = sep + 1;
+disk/core.c:				kvm->cfg.disk_image[kvm->cfg.image_count].readonly = true;
+disk/core.c:				kvm->cfg.disk_image[kvm->cfg.image_count].direct = true;
+disk/core.c:	kvm->cfg.image_count++;
+disk/core.c:	struct disk_image_params *params = (struct disk_image_params *)&kvm->cfg.disk_image;
+disk/core.c:	int count = kvm->cfg.image_count;
+disk/core.c:		disks[i]->debug_iodelay = kvm->cfg.debug_iodelay;
+disk/core.c:	if (kvm->cfg.image_count) {
+disk/core.c:		kvm->disks = disk_image__open_all(kvm);
+disk/core.c:		if (IS_ERR(kvm->disks))
+disk/core.c:			return PTR_ERR(kvm->disks);
+disk/core.c:	return disk_image__close_all(kvm->disks, kvm->nr_disks);
+hw/i8042.c:#include "kvm/kvm-cpu.h"
+hw/pci-shmem.c:		r = ioctl(kvm->vm_fd, KVM_IRQFD, &irqfd);
+hw/pci-shmem.c:	return ioctl(kvm->vm_fd, KVM_IOEVENTFD, &ioevent);
+hw/pci-shmem.c:	return ioctl(kvm->vm_fd, KVM_IOEVENTFD, &ioevent);
+hw/rtc.c:	kvm->nmi_disabled	= value & (1UL << 7);
+hw/serial.c:	if (kvm->cfg.active_console != CONSOLE_8250)
+hw/vesa.c:#include "kvm/kvm-cpu.h"
+hw/vesa.c:	if (!kvm->cfg.vnc && !kvm->cfg.sdl && !kvm->cfg.gtk)
+include/kvm/gtk3.h:	if (kvm->cfg.gtk)
+include/kvm/gtk3.h:	if (kvm->cfg.gtk)
+include/kvm/kvm-config.h:#include "kvm/kvm-config-arch.h"
+include/kvm/kvm-cpu.h:#include "kvm/kvm-cpu-arch.h"
+include/kvm/kvm.h:#include "kvm/kvm-arch.h"
+include/kvm/kvm.h:#include "kvm/kvm-config.h"
+include/kvm/kvm.h:	return kvm->ram_start <= p && p < (kvm->ram_start + kvm->ram_size);
+include/kvm/sdl.h:	if (kvm->cfg.sdl)
+include/kvm/sdl.h:	if (kvm->cfg.sdl)
+ioeventfd.c:	r = ioctl(ioevent->fn_kvm->vm_fd, KVM_IOEVENTFD, &kvm_ioevent);
+ioeventfd.c:	ioctl(ioevent->fn_kvm->vm_fd, KVM_IOEVENTFD, &kvm_ioevent);
+ioport.c:	if (kvm->cfg.ioport_debug)
+ioport.c:	return !kvm->cfg.ioport_debug;
+kvm-cmd.c:#include "kvm/kvm-cmd.h"
+kvm-cpu.c:#include "kvm/kvm-cpu.h"
+kvm-cpu.c:	/* The kvm->cpus array contains a null pointer in the last location */
+kvm-cpu.c:		if (kvm->cpus[i])
+kvm-cpu.c:			pthread_kill(kvm->cpus[i]->thread, SIGKVMEXIT);
+kvm-cpu.c:	if (cpu->kvm->cfg.single_step)
+kvm-cpu.c:	if (kvm->cfg.nrcpus > max_cpus) {
+kvm-cpu.c:		kvm->cfg.nrcpus = max_cpus;
+kvm-cpu.c:	} else if (kvm->cfg.nrcpus > recommended_cpus) {
+kvm-cpu.c:	kvm->nrcpus = kvm->cfg.nrcpus;
+kvm-cpu.c:	kvm->cpus = calloc(kvm->nrcpus + 1, sizeof(void *));
+kvm-cpu.c:	if (!kvm->cpus) {
+kvm-cpu.c:		pr_warning("Couldn't allocate array for %d CPUs", kvm->nrcpus);
+kvm-cpu.c:	for (i = 0; i < kvm->nrcpus; i++) {
+kvm-cpu.c:		kvm->cpus[i] = kvm_cpu__arch_init(kvm, i);
+kvm-cpu.c:		if (!kvm->cpus[i]) {
+kvm-cpu.c:	for (i = 0; i < kvm->nrcpus; i++)
+kvm-cpu.c:		free(kvm->cpus[i]);
+kvm-cpu.c:	kvm_cpu__delete(kvm->cpus[0]);
+kvm-cpu.c:	kvm->cpus[0] = NULL;
+kvm-cpu.c:	for (i = 1; i < kvm->nrcpus; i++) {
+kvm-cpu.c:		if (kvm->cpus[i]->is_running) {
+kvm-cpu.c:			pthread_kill(kvm->cpus[i]->thread, SIGKVMEXIT);
+kvm-cpu.c:			if (pthread_join(kvm->cpus[i]->thread, &ret) != 0)
+kvm-cpu.c:			kvm_cpu__delete(kvm->cpus[i]);
+kvm-cpu.c:	free(kvm->cpus);
+kvm-cpu.c:	kvm->nrcpus = 0;
+kvm-ipc.c:#include "kvm/kvm-ipc.h"
+kvm-ipc.c:#include "kvm/kvm-cpu.h"
+kvm-ipc.c:		 kvm__get_dir(), kvm->cfg.guest_name, KVM_SOCK_SUFFIX);
+kvm-ipc.c:	kvm__set_thread_name("kvm-ipc");
+kvm-ipc.c:		kvm->vm_state = KVM_VMSTATE_RUNNING;
+kvm-ipc.c:		kvm->vm_state = KVM_VMSTATE_PAUSED;
+kvm-ipc.c:		ioctl(kvm->vm_fd, KVM_KVMCLOCK_CTRL);
+kvm-ipc.c:		r = write(fd, &kvm->vm_state, sizeof(kvm->vm_state));
+kvm-ipc.c:		if ((int)vcpu >= kvm->nrcpus)
+kvm-ipc.c:		kvm->cpus[vcpu]->needs_nmi = 1;
+kvm-ipc.c:		pthread_kill(kvm->cpus[vcpu]->thread, SIGUSR1);
+kvm-ipc.c:	for (i = 0; i < kvm->nrcpus; i++) {
+kvm-ipc.c:		struct kvm_cpu *cpu = kvm->cpus[i];
+kvm-ipc.c:	kvm__remove_socket(kvm->cfg.guest_name);
+kvm.c:#include "kvm/kvm-cpu.h"
+kvm.c:#include "kvm/kvm-ipc.h"
+kvm.c:	ret = ioctl(kvm->sys_fd, KVM_CHECK_EXTENSION, extension);
+kvm.c:	kvm->sys_fd = -1;
+kvm.c:	kvm->vm_fd = -1;
+kvm.c:	list_for_each_entry_safe(bank, tmp, &kvm->mem_banks, list) {
+kvm.c:		.slot			= kvm->mem_slots++,
+kvm.c:	ret = ioctl(kvm->vm_fd, KVM_SET_USER_MEMORY_REGION, &mem);
+kvm.c:	list_add(&bank->list, &kvm->mem_banks);
+kvm.c:	list_for_each_entry(bank, &kvm->mem_banks, list) {
+kvm.c:	list_for_each_entry(bank, &kvm->mem_banks, list) {
+kvm.c:	ret = ioctl(kvm->sys_fd, KVM_CHECK_EXTENSION, KVM_CAP_NR_VCPUS);
+kvm.c:	ret = ioctl(kvm->sys_fd, KVM_CHECK_EXTENSION, KVM_CAP_MAX_VCPUS);
+kvm.c:	kvm->sys_fd = open(kvm->cfg.dev, O_RDWR);
+kvm.c:	if (kvm->sys_fd < 0) {
+kvm.c:			       "enabled and that the KVM modules are loaded.", kvm->cfg.dev);
+kvm.c:			       "about the failure.)", kvm->cfg.dev);
+kvm.c:			pr_err("Could not open %s: ", kvm->cfg.dev);
+kvm.c:	ret = ioctl(kvm->sys_fd, KVM_GET_API_VERSION, 0);
+kvm.c:	kvm->vm_fd = ioctl(kvm->sys_fd, KVM_CREATE_VM, 0);
+kvm.c:	if (kvm->vm_fd < 0) {
+kvm.c:		ret = kvm->vm_fd;
+kvm.c:	kvm__arch_init(kvm, kvm->cfg.hugetlbfs_path, kvm->cfg.ram_size);
+kvm.c:	INIT_LIST_HEAD(&kvm->mem_banks);
+kvm.c:	if (!kvm->cfg.firmware_filename) {
+kvm.c:		if (!kvm__load_kernel(kvm, kvm->cfg.kernel_filename,
+kvm.c:				kvm->cfg.initrd_filename, kvm->cfg.real_cmdline))
+kvm.c:			die("unable to load kernel %s", kvm->cfg.kernel_filename);
+kvm.c:	if (kvm->cfg.firmware_filename) {
+kvm.c:		if (!kvm__load_firmware(kvm, kvm->cfg.firmware_filename))
+kvm.c:			die("unable to load firmware image %s: %s", kvm->cfg.firmware_filename, strerror(errno));
+kvm.c:	close(kvm->vm_fd);
+kvm.c:	close(kvm->sys_fd);
+kvm.c:	if (!kvm->cpus[0] || kvm->cpus[0]->thread == 0)
+kvm.c:	for (i = 0; i < kvm->nrcpus; i++)
+kvm.c:		pthread_kill(kvm->cpus[i]->thread, SIGKVMPAUSE);
+kvm.c:	while (paused_vcpus < kvm->nrcpus) {
+kvm.c:	if (!kvm->cpus[0] || kvm->cpus[0]->thread == 0)
+main.c:#include <kvm/kvm-cmd.h>
+mmio.c:		ret = ioctl(kvm->vm_fd, KVM_REGISTER_COALESCED_MMIO, &zone);
+mmio.c:	ioctl(kvm->vm_fd, KVM_UNREGISTER_COALESCED_MMIO, &zone);
+mmio.c:		if (kvm->cfg.mmio_debug)
+powerpc/cpu_info.c:	} else if (ioctl(kvm->vm_fd, KVM_PPC_GET_SMMU_INFO, &cpu_info->mmu_info) < 0) {
+powerpc/cpu_info.c:		if (kvm->ram_pagesize < (1ul << sps->page_shift)) {
+powerpc/cpu_info.c:			if (kvm->ram_pagesize < (1ul << sps->enc[j].page_shift))
+powerpc/cpu_info.c:	u32 pvr = kvm->arch.pvr;
+powerpc/kvm-cpu.c:#include "kvm/kvm-cpu.h"
+powerpc/kvm-cpu.c:	vcpu->vcpu_fd = ioctl(vcpu->kvm->vm_fd, KVM_CREATE_VCPU, cpu_id);
+powerpc/kvm-cpu.c:	mmap_size = ioctl(vcpu->kvm->sys_fd, KVM_GET_VCPU_MMAP_SIZE, 0);
+powerpc/kvm-cpu.c:		r->gpr[3] = vcpu->kvm->arch.fdt_gra;
+powerpc/kvm-cpu.c:	sregs.u.s.sdr1 = vcpu->kvm->arch.sdr1;
+powerpc/kvm-cpu.c:	sregs.pvr = vcpu->kvm->arch.pvr;
+powerpc/kvm.c:	phys_size  = kvm->ram_size;
+powerpc/kvm.c:	host_mem   = kvm->ram_start;
+powerpc/kvm.c:	kvm->ram_size		= ram_size;
+powerpc/kvm.c:	kvm->ram_start = mmap_anon_or_hugetlbfs(kvm, hugetlbfs_path, kvm->ram_size);
+powerpc/kvm.c:	if (kvm->ram_start == MAP_FAILED)
+powerpc/kvm.c:		    kvm->ram_size, errno);
+powerpc/kvm.c:	kvm->arch.fdt_gra = kvm->ram_size - FDT_MAX_SIZE;
+powerpc/kvm.c:	kvm->arch.rtas_gra = kvm->arch.fdt_gra - RTAS_MAX_SIZE;
+powerpc/kvm.c:	madvise(kvm->ram_start, kvm->ram_size, MADV_MERGEABLE);
+powerpc/kvm.c:	kvm->arch.sdr1 = ((hpt + 0x3ffffULL) & ~0x3ffffULL) | (HPT_ORDER-18);
+powerpc/kvm.c:	kvm->arch.pvr = mfpvr();
+powerpc/kvm.c:	cap_ppc_rma = ioctl(kvm->sys_fd, KVM_CHECK_EXTENSION, KVM_CAP_PPC_RMA);
+powerpc/kvm.c:	munmap(kvm->ram_start, kvm->ram_size);
+powerpc/kvm.c:		       p < (kvm->ram_start + kvm->ram_size))
+powerpc/kvm.c:		if (p >= (kvm->ram_start + kvm->ram_size))
+powerpc/kvm.c:		kvm->arch.initrd_gra = INITRD_LOAD_ADDR;
+powerpc/kvm.c:		kvm->arch.initrd_size = p-i_start;
+powerpc/kvm.c:		kvm->arch.initrd_size = 0;
+powerpc/kvm.c:	uint64_t 	mem_reg_property[] = { 0, cpu_to_be64(kvm->ram_size) };
+powerpc/kvm.c:	int 		smp_cpus = kvm->nrcpus;
+powerpc/kvm.c:	/* Generate an appropriate DT at kvm->arch.fdt_gra */
+powerpc/kvm.c:	void *fdt_dest = guest_flat_to_host(kvm, kvm->arch.fdt_gra);
+powerpc/kvm.c:	_FDT(fdt_property_cell(fdt, "linux,rtas-base", kvm->arch.rtas_gra));
+powerpc/kvm.c:	_FDT(fdt_property_cell(fdt, "linux,rtas-entry", kvm->arch.rtas_gra));
+powerpc/kvm.c:	_FDT(fdt_property_cell(fdt, "rtas-size", kvm->arch.rtas_size));
+powerpc/kvm.c:	if (kvm->arch.initrd_size != 0) {
+powerpc/kvm.c:		uint32_t ird_st_prop = cpu_to_be32(kvm->arch.initrd_gra);
+powerpc/kvm.c:		uint32_t ird_end_prop = cpu_to_be32(kvm->arch.initrd_gra +
+powerpc/kvm.c:						    kvm->arch.initrd_size);
+powerpc/kvm.c:		_FDT(fdt_property_cell(fdt, "cpu-version", kvm->arch.pvr));
+powerpc/kvm.c:	_FDT(fdt_add_mem_rsv(fdt_dest, kvm->arch.rtas_gra, kvm->arch.rtas_size));
+powerpc/kvm.c:	uint32_t *rtas = guest_flat_to_host(kvm, kvm->arch.rtas_gra);
+powerpc/kvm.c:	kvm->arch.rtas_size = 20;
+powerpc/kvm.c:		kvm->arch.rtas_size, kvm->arch.rtas_gra);
+powerpc/spapr.h:#include "kvm/kvm-cpu.h"
+powerpc/spapr_hcall.c:#include "kvm/kvm-cpu.h"
+powerpc/spapr_hvcons.c:#include "kvm/kvm-cpu.h"
+powerpc/spapr_hvcons.c:	if (vcpu->kvm->cfg.active_console != CONSOLE_HV)
+powerpc/spapr_pci.c:	kvm->arch.phb = &phb;
+powerpc/spapr_rtas.c:#include "kvm/kvm-cpu.h"
+powerpc/spapr_rtas.c:	if (vcpu->kvm->cfg.active_console == CONSOLE_HV && term_readable(0) &&
+powerpc/xics.c:	icp_set_cppr(vcpu->kvm->arch.icp, vcpu->cpu_id, cppr);
+powerpc/xics.c:	if (server >= vcpu->kvm->arch.icp->nr_servers) {
+powerpc/xics.c:	icp_set_mfrr(vcpu->kvm->arch.icp, server, mfrr);
+powerpc/xics.c:	uint32_t xirr = icp_accept(vcpu->kvm->arch.icp->ss + vcpu->cpu_id);
+powerpc/xics.c:	icp_eoi(vcpu->kvm->arch.icp, vcpu->cpu_id, xirr);
+powerpc/xics.c:	struct ics_state *ics = vcpu->kvm->arch.icp->ics;
+powerpc/xics.c:	struct ics_state *ics = vcpu->kvm->arch.icp->ics;
+powerpc/xics.c:	struct ics_state *ics = vcpu->kvm->arch.icp->ics;
+powerpc/xics.c:	struct ics_state *ics = vcpu->kvm->arch.icp->ics;
+powerpc/xics.c:	icp->nr_servers = kvm->nrcpus;
+powerpc/xics.c:	for (j = 0; j < kvm->nrcpus; j++) {
+powerpc/xics.c:		struct kvm_cpu *vcpu = kvm->cpus[j];
+powerpc/xics.c:	kvm->arch.icp = icp;
+powerpc/xics.c:	ics_set_irq_msi(kvm->arch.icp->ics, irq - kvm->arch.icp->ics->offset, level);
+symbol.c:	if (!kvm->vmlinux)
+symbol.c:	abfd = bfd_openr(kvm->vmlinux, NULL);
+term.c:#include "kvm/kvm-cpu.h"
+ui/gtk3.c:#include "kvm/kvm-cpu.h"
+ui/gtk3.c:	if (!kvm->cfg.gtk)
+ui/gtk3.c:	if (kvm->cfg.gtk)
+ui/sdl.c:#include "kvm/kvm-cpu.h"
+ui/sdl.c:	kvm__set_thread_name("kvm-sdl-worker");
+ui/sdl.c:	if (!kvm->cfg.sdl)
+ui/sdl.c:	if (kvm->cfg.sdl)
+ui/vnc.c:	kvm__set_thread_name("kvm-vnc-worker");
+ui/vnc.c:	if (!kvm->cfg.vnc)
+ui/vnc.c:	if (kvm->cfg.vnc)
+util/generate-cmdlist.sh:sed -n 's/^lkvm-\([^ \t]*\).*common/\1/p' command-list.txt |
+util/generate-cmdlist.sh:     sed -n '/^NAME/,/^lkvm-'"$cmd"'/ {
+util/generate-cmdlist.sh:		 s/.*kvm-'"$cmd"' - \(.*\)/  {"'"$cmd"'", "\1"},/
+util/generate-cmdlist.sh:	 }' "Documentation/kvm-$cmd.txt"
+util/util.c:	kvm->ram_pagesize = blk_size;
+util/util.c:		kvm->ram_pagesize = getpagesize();
+virtio/9p.c:		if (kvm->cfg.using_rootfs)
+virtio/9p.c:		kvm->cfg.using_rootfs = 1;
+virtio/9p.c:		if (kvm->cfg.using_rootfs)
+virtio/9p.c:		kvm->cfg.using_rootfs = kvm->cfg.custom_rootfs = 1;
+virtio/9p.c:		kvm->cfg.custom_rootfs_name = arg;
+virtio/balloon.c:#include "kvm/kvm-ipc.h"
+virtio/balloon.c:	if (!kvm->cfg.balloon)
+virtio/blk.c:	for (i = 0; i < kvm->nr_disks; i++) {
+virtio/blk.c:		if (kvm->disks[i]->wwpn)
+virtio/blk.c:		r = virtio_blk__init_one(kvm, kvm->disks[i]);
+virtio/console.c:	if (kvm->cfg.active_console != CONSOLE_VIRTIO)
+virtio/console.c:	if (kvm->cfg.active_console != CONSOLE_VIRTIO)
+virtio/net.c:	r = ioctl(kvm->vm_fd, KVM_IRQFD, &irq);
+virtio/net.c:		.memory_size		= kvm->ram_size,
+virtio/net.c:		.userspace_addr		= (unsigned long)kvm->ram_start,
+virtio/net.c:			for (i = 0; i < kvm->cfg.num_net_devices; i++)
+virtio/net.c:				if (kvm->cfg.net_params[i].mode == NET_MODE_USER)
+virtio/net.c:			kvm->cfg.no_net = 1;
+virtio/net.c:			die("Unknown network mode %s, please use user, tap or none", kvm->cfg.network);
+virtio/net.c:	p.guest_mac[5] += kvm->cfg.num_net_devices;
+virtio/net.c:	kvm->cfg.num_net_devices++;
+virtio/net.c:	kvm->cfg.net_params = realloc(kvm->cfg.net_params, kvm->cfg.num_net_devices * sizeof(*kvm->cfg.net_params));
+virtio/net.c:	if (kvm->cfg.net_params == NULL)
+virtio/net.c:	kvm->cfg.net_params[kvm->cfg.num_net_devices - 1] = p;
+virtio/net.c:	for (i = 0; i < kvm->cfg.num_net_devices; i++) {
+virtio/net.c:		kvm->cfg.net_params[i].kvm = kvm;
+virtio/net.c:		virtio_net__init_one(&kvm->cfg.net_params[i]);
+virtio/net.c:	if (kvm->cfg.num_net_devices == 0 && kvm->cfg.no_net == 0) {
+virtio/net.c:			.guest_ip	= kvm->cfg.guest_ip,
+virtio/net.c:			.host_ip	= kvm->cfg.host_ip,
+virtio/net.c:			.script		= kvm->cfg.script,
+virtio/net.c:		str_to_mac(kvm->cfg.guest_mac, net_params.guest_mac);
+virtio/net.c:		str_to_mac(kvm->cfg.host_mac, net_params.host_mac);
+virtio/pci.c:	ioctl(kvm->vm_fd, KVM_SIGNAL_MSI, &msi);
+virtio/rng.c:	if (!kvm->cfg.virtio_rng)
+virtio/scsi.c:	r = ioctl(kvm->vm_fd, KVM_IRQFD, &irq);
+virtio/scsi.c:		.memory_size		= kvm->ram_size,
+virtio/scsi.c:		.userspace_addr		= (unsigned long)kvm->ram_start,
+virtio/scsi.c:	for (i = 0; i < kvm->nr_disks; i++) {
+virtio/scsi.c:		if (!kvm->disks[i]->wwpn)
+virtio/scsi.c:		r = virtio_scsi_init_one(kvm, kvm->disks[i]);
+x86/bios.c:	interrupt_table__set(&kvm->arch.interrupt_table, &intr_desc, handler->irq);
+x86/bios.c:	if (kvm->ram_size < KVM_32BIT_GAP_START) {
+x86/bios.c:			.size		= kvm->ram_size - BZ_KERNEL_START,
+x86/bios.c:			.size		= kvm->ram_size - KVM_32BIT_MAX_MEM_SIZE,
+x86/bios.c:	interrupt_table__setup(&kvm->arch.interrupt_table, &intr_desc);
+x86/bios.c:	interrupt_table__copy(&kvm->arch.interrupt_table, p, REAL_INTR_SIZE);
+x86/boot.c:	kvm->arch.boot_selector	= BIOS_SELECTOR;
+x86/boot.c:	kvm->arch.boot_ip	= BIOS_IP;
+x86/boot.c:	kvm->arch.boot_sp	= BIOS_SP;
+x86/cpuid.c:#include "kvm/kvm-cpu.h"
+x86/cpuid.c:	if (ioctl(vcpu->kvm->sys_fd, KVM_GET_SUPPORTED_CPUID, kvm_cpuid) < 0)
+x86/irq.c:	r = ioctl(kvm->vm_fd, KVM_SET_GSI_ROUTING, irq_routing);
+x86/irq.c:	r = ioctl(kvm->vm_fd, KVM_SET_GSI_ROUTING, irq_routing);
+x86/kvm-cpu.c:#include "kvm/kvm-cpu.h"
+x86/kvm-cpu.c:	vcpu->vcpu_fd = ioctl(vcpu->kvm->vm_fd, KVM_CREATE_VCPU, cpu_id);
+x86/kvm-cpu.c:	mmap_size = ioctl(vcpu->kvm->sys_fd, KVM_GET_VCPU_MMAP_SIZE, 0);
+x86/kvm-cpu.c:	coalesced_offset = ioctl(kvm->sys_fd, KVM_CHECK_EXTENSION, KVM_CAP_COALESCED_MMIO);
+x86/kvm-cpu.c:		.rip	= vcpu->kvm->arch.boot_ip,
+x86/kvm-cpu.c:		.rsp	= vcpu->kvm->arch.boot_sp,
+x86/kvm-cpu.c:		.rbp	= vcpu->kvm->arch.boot_sp,
+x86/kvm-cpu.c:	vcpu->sregs.cs.selector	= vcpu->kvm->arch.boot_selector;
+x86/kvm-cpu.c:	vcpu->sregs.cs.base	= selector_to_base(vcpu->kvm->arch.boot_selector);
+x86/kvm-cpu.c:	vcpu->sregs.ss.selector	= vcpu->kvm->arch.boot_selector;
+x86/kvm-cpu.c:	vcpu->sregs.ss.base	= selector_to_base(vcpu->kvm->arch.boot_selector);
+x86/kvm-cpu.c:	vcpu->sregs.ds.selector	= vcpu->kvm->arch.boot_selector;
+x86/kvm-cpu.c:	vcpu->sregs.ds.base	= selector_to_base(vcpu->kvm->arch.boot_selector);
+x86/kvm-cpu.c:	vcpu->sregs.es.selector	= vcpu->kvm->arch.boot_selector;
+x86/kvm-cpu.c:	vcpu->sregs.es.base	= selector_to_base(vcpu->kvm->arch.boot_selector);
+x86/kvm-cpu.c:	vcpu->sregs.fs.selector	= vcpu->kvm->arch.boot_selector;
+x86/kvm-cpu.c:	vcpu->sregs.fs.base	= selector_to_base(vcpu->kvm->arch.boot_selector);
+x86/kvm-cpu.c:	vcpu->sregs.gs.selector	= vcpu->kvm->arch.boot_selector;
+x86/kvm-cpu.c:	vcpu->sregs.gs.base	= selector_to_base(vcpu->kvm->arch.boot_selector);
+x86/kvm-cpu.c:		(vcpu->kvm->nmi_disabled ? "disabled" : "enabled"));
+x86/kvm.c:	if (kvm->ram_size < KVM_32BIT_GAP_START) {
+x86/kvm.c:		phys_size  = kvm->ram_size;
+x86/kvm.c:		host_mem   = kvm->ram_start;
+x86/kvm.c:		host_mem   = kvm->ram_start;
+x86/kvm.c:		phys_size  = kvm->ram_size - phys_start;
+x86/kvm.c:		host_mem   = kvm->ram_start + phys_start;
+x86/kvm.c:	ret = ioctl(kvm->vm_fd, KVM_SET_TSS_ADDR, 0xfffbd000);
+x86/kvm.c:	ret = ioctl(kvm->vm_fd, KVM_CREATE_PIT2, &pit_config);
+x86/kvm.c:		kvm->ram_size = ram_size;
+x86/kvm.c:		kvm->ram_start = mmap_anon_or_hugetlbfs(kvm, hugetlbfs_path, ram_size);
+x86/kvm.c:		kvm->ram_start = mmap_anon_or_hugetlbfs(kvm, hugetlbfs_path, ram_size + KVM_32BIT_GAP_SIZE);
+x86/kvm.c:		kvm->ram_size = ram_size + KVM_32BIT_GAP_SIZE;
+x86/kvm.c:		if (kvm->ram_start != MAP_FAILED)
+x86/kvm.c:			mprotect(kvm->ram_start + KVM_32BIT_GAP_START, KVM_32BIT_GAP_SIZE, PROT_NONE);
+x86/kvm.c:	if (kvm->ram_start == MAP_FAILED)
+x86/kvm.c:	madvise(kvm->ram_start, kvm->ram_size, MADV_MERGEABLE);
+x86/kvm.c:	ret = ioctl(kvm->vm_fd, KVM_CREATE_IRQCHIP);
+x86/kvm.c:	munmap(kvm->ram_start, kvm->ram_size);
+x86/kvm.c:	if (ioctl(kvm->vm_fd, KVM_IRQ_LINE, &irq_level) < 0)
+x86/kvm.c:	kvm->arch.boot_selector	= BOOT_LOADER_SELECTOR;
+x86/kvm.c:	kvm->arch.boot_ip	= BOOT_LOADER_IP;
+x86/kvm.c:	kvm->arch.boot_sp	= BOOT_LOADER_SP;
+x86/kvm.c:	if (kvm->cfg.vnc || kvm->cfg.sdl || kvm->cfg.gtk) {
+x86/kvm.c:		if (!kvm->cfg.arch.vidmode)
+x86/kvm.c:			vidmode = kvm->cfg.arch.vidmode;
+x86/kvm.c:			else if (addr < (kvm->ram_size - initrd_stat.st_size))
+x86/kvm.c:	kvm->arch.boot_selector = BOOT_LOADER_SELECTOR;
+x86/kvm.c:	kvm->arch.boot_ip = BOOT_LOADER_IP + 0x200;
+x86/kvm.c:	kvm->arch.boot_sp = BOOT_LOADER_SP;
+x86/mptable.c:	unsigned int i, nentries = 0, ncpus = kvm->nrcpus;
