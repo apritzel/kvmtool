@@ -198,11 +198,6 @@ endif
 
 # libfdt support
 
-ifeq (y,$(ARCH_WANT_LIBFDT))
-	DEFINES		+= -DCONFIG_HAS_LIBFDT
-	LIBS_DYNOPT	+= -lfdt
-	LIBS_STATOPT	+= -lfdt
-endif
 
 ###
 
@@ -275,6 +270,16 @@ endif
 
 ifneq ($(call try-build,$(SOURCE_STATIC),,-static),y)
         $(error No static libc found. Please install glibc-static package.)
+endif
+
+ifeq (y,$(ARCH_WANT_LIBFDT))
+	ifneq ($(call try-build,$(SOURCE_LIBFDT),$(CFLAGS),-lfdt),y)
+          $(error No libfdt found. Please install libfdt-dev package)
+	else
+		CFLAGS_DYNOPT	+= -DCONFIG_HAS_LIBFDT
+		LIBS_DYNOPT	+= -lfdt
+		LIBS_STATOPT	+= -lfdt
+	endif
 endif
 ###
 
